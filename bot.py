@@ -1,6 +1,5 @@
 import os, asyncio, discord
 from discord.ext import commands
-from keep_alive import keep_alive
 
 intents = discord.Intents.default()
 intents.message_content = True  # 開啟讀取訊息內容權限
@@ -28,10 +27,12 @@ async def load_extensions():
                 print(f"❌ 載入 {filename} 失敗：{e}")
 
 async def main():
-    keep_alive()
+    token = os.getenv("DISCORD_TOKEN")
+        if not token:
+            raise RuntimeError("❌ 沒有設定 DISCORD_TOKEN！")
     async with bot:
         await load_extensions()
-        await bot.start(os.getenv("DISCORD_TOKEN"))
+        await bot.start(token)
 
 if __name__ == "__main__":
     asyncio.run(main())
