@@ -30,8 +30,8 @@ async def load_extensions():
 
 async def main():
     token = os.getenv("DISCORD_TOKEN")
-        if not token:
-            raise RuntimeError("❌ 沒有設定 DISCORD_TOKEN！")
+    if not token:
+        raise RuntimeError("❌ 沒有設定 DISCORD_TOKEN！")
     async with bot:
         await load_extensions()
         await bot.start(token)
