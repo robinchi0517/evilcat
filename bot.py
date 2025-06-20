@@ -1,5 +1,7 @@
 import os, asyncio, discord
 from discord.ext import commands
+from keep_alive import keep_alive
+keep_alive()
 
 intents = discord.Intents.default()
 intents.message_content = True  # 開啟讀取訊息內容權限
