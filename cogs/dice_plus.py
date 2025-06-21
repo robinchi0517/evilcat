@@ -177,6 +177,25 @@ def handle_build_command(content: str) -> str:
     
     return f"{title}\n" + "\n".join(results)
 
+def handle_choice_command(content: str) -> str:
+    pattern = re.compile(r"^!choice(\d*)\s+(.+)", re.IGNORECASE)
+    match = pattern.match(content)
+    if not match:
+        return "⚠️ 是要選擇嗎？請用 `!choice 選項1 選項2 ...` 或 `!choiceN 選項1 選項2 ...` 喔！"
+    
+    num_str, options_str = match.groups()
+    n = int(num_str) if num_str else 1
+
+    raw_options = re.split(r"[,\s]+", options_str.strip())
+    options = [opt for opt in raw_options if opt]
+
+    if len(options) < n:
+        return f"⚠️ 至少需要 {n+1} 個選項才能挑選 {1} 個結果。"
+    
+    selected = random.sample(options, n)
+    
+    return f"🎲 選擇結果為 {', '.join(selected)}"
+
 class DicePLUS(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -198,6 +217,9 @@ class DicePLUS(commands.Cog):
             await message.channel.send(response)
         elif  content.startswith("!build"):
             response = handle_build_command(content)
+            await message.channel.send(response)
+        elif content.startswith("!choice"):
+            response = handle_choice_command(content)
             await message.channel.send(response)
 
 async def setup(bot: commands.Bot):
